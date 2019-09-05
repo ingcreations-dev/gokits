@@ -15,6 +15,6 @@ func init() {
 	Logger = &logger{}
 }
 
-func (logger *logger) initializer(file string,level zapcore.Level,fileMaxSize int,maxFileCount int,maxBackupDays int,compress bool,serviceName string){
+func (logger *logger) Initializer(file string,level zapcore.Level,fileMaxSize int,maxFileCount int,maxBackupDays int,compress bool,serviceName string){
 	logger.App = NewLogger(file, level, fileMaxSize, maxFileCount, maxBackupDays, compress, serviceName)
 }
