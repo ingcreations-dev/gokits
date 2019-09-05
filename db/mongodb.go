@@ -12,9 +12,9 @@ import (
 	"time"
 )
 
-var Mongodb *mongoClient
+var Mongodb *MongoClient
 
-type mongoClient struct {
+type MongoClient struct {
 	database *mongo.Database
 	Duration time.Duration
 }
@@ -36,19 +36,19 @@ func init() {
 		panic(err.Error())
 	}
 
-	Mongodb = &mongoClient{
+	Mongodb = &MongoClient{
 		database : client.Database(db),
 		Duration: dur,
 	}
 }
 
-func (client *mongoClient) GetCollection(tableName string){
+func (client *MongoClient) GetCollection(tableName string){
 	collections := client.database.Collection(tableName)
 
 	println(collections.Name())
 }
 
-func (client *mongoClient) Save(tableName string,table interface{}) error{
+func (client *MongoClient) Save(tableName string,table interface{}) error{
 	ctx :=client.getCtx()
 	result,err := client.database.Collection(tableName).InsertOne(ctx,table)
 	if err != nil{
@@ -58,13 +58,13 @@ func (client *mongoClient) Save(tableName string,table interface{}) error{
 	return nil
 }
 
-func (client *mongoClient) Update(tableName string,filter bson.M,setter interface{}) error {
+func (client *MongoClient) Update(tableName string,filter bson.M,setter interface{}) error {
 	ctx :=client.getCtx()
 	_,err := client.database.Collection(tableName).UpdateOne(ctx,filter,setter)
 	return err
 }
 
-func (client *mongoClient) UpdateMany(tableName string,filter bson.M,setter interface{}) error {
+func (client *MongoClient) UpdateMany(tableName string,filter bson.M,setter interface{}) error {
 	ctx :=client.getCtx()
 	_,err := client.database.Collection(tableName).UpdateMany(ctx,filter,setter)
 	return err
@@ -73,7 +73,7 @@ func (client *mongoClient) UpdateMany(tableName string,filter bson.M,setter inte
 /**
 通过条件查询一个文档
  */
-func (client *mongoClient) FindOne(tableName string,filter bson.M,table interface{}) error{
+func (client *MongoClient) FindOne(tableName string,filter bson.M,table interface{}) error{
 	result := client.database.Collection(tableName).FindOne(client.getCtx(),filter)
 	if result.Err() != nil{
 		return result.Err()
@@ -86,7 +86,7 @@ func (client *mongoClient) FindOne(tableName string,filter bson.M,table interfac
 	return nil
 }
 
-func (client *mongoClient) Delete(tableName string,filter bson.M) error{
+func (client *MongoClient) Delete(tableName string,filter bson.M) error{
 	_,err := client.database.Collection(tableName).DeleteOne(client.getCtx(),filter)
 	return err
 }
@@ -94,15 +94,15 @@ func (client *mongoClient) Delete(tableName string,filter bson.M) error{
 /**
 通过条件查询列表
  */
-func (client *mongoClient) FindAllByCondition(tableName string,filter bson.M) (*mongo.Cursor,error) {
+func (client *MongoClient) FindAllByCondition(tableName string,filter bson.M) (*mongo.Cursor,error) {
 	return client.database.Collection(tableName).Find(client.getCtx(),filter)
 }
 
-func (client *mongoClient) FindAll(tableName string)(*mongo.Cursor,error){
+func (client *MongoClient) FindAll(tableName string)(*mongo.Cursor,error){
 	return client.database.Collection(tableName).Find(client.getCtx(),nil)
 }
 
-func (client *mongoClient) getCtx() context.Context{
+func (client *MongoClient) getCtx() context.Context{
 	ctx,_ := context.WithTimeout(context.Background(),client.Duration)
 	return ctx
 }
