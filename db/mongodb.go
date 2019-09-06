@@ -58,10 +58,14 @@ func (client *MongoClient) Save(tableName string,table interface{}) error{
 	return nil
 }
 
-func (client *MongoClient) Update(tableName string,filter bson.M,setter interface{}) error {
+func (client *MongoClient) Update(tableName string,filter bson.M,setter bson.D) error {
 	ctx :=client.getCtx()
 	_,err := client.database.Collection(tableName).UpdateOne(ctx,filter,setter)
 	return err
+}
+func (client *MongoClient) FindOneAndReplace(tableName string,filter bson.M,document interface{}) error {
+	ctx :=client.getCtx()
+	return client.database.Collection(tableName).FindOneAndReplace(ctx,filter,document).Err()
 }
 
 func (client *MongoClient) UpdateMany(tableName string,filter bson.M,setter interface{}) error {
