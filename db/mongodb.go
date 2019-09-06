@@ -110,6 +110,18 @@ func (client *MongoClient) FindAll(tableName string)(*mongo.Cursor,error){
 	return client.database.Collection(tableName).Find(client.getCtx(),nil)
 }
 
+func (client *MongoClient) FindAllAndFill(tableName string,array []interface{}) error {
+
+	cursor,err := client.database.Collection(tableName).Find(client.getCtx(),nil);
+	if err != nil{
+		return err
+	}
+	ctx := client.getCtx()
+	defer cursor.Close(ctx)
+	cursor.All(ctx,&array)
+	return nil
+}
+
 func (client *MongoClient) getCtx() context.Context{
 	ctx,_ := context.WithTimeout(context.Background(),client.Duration)
 	return ctx
