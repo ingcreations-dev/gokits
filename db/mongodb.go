@@ -110,9 +110,9 @@ func (client *MongoClient) FindAll(tableName string)(*mongo.Cursor,error){
 	return client.database.Collection(tableName).Find(client.getCtx(),nil)
 }
 
-func (client *MongoClient) FindAllAndFill(tableName string,array interface{}) error {
+func (client *MongoClient) FindAndFill(tableName string,filter bson.M,array interface{}) error {
 
-	cursor,err := client.database.Collection(tableName).Find(client.getCtx(),nil);
+	cursor,err := client.database.Collection(tableName).Find(client.getCtx(),filter)
 	if err != nil{
 		return err
 	}
