@@ -86,6 +86,10 @@ func (client *MongoClient) FindOne(tableName string,filter bson.M,table interfac
 	return nil
 }
 
+func (client *MongoClient) FindCount(tableName string,filter bson.M) (int64,error){
+	return client.database.Collection(tableName).CountDocuments(client.getCtx(),filter)
+}
+
 func (client *MongoClient) Delete(tableName string,filter bson.M) error{
 	_,err := client.database.Collection(tableName).DeleteOne(client.getCtx(),filter)
 	return err
