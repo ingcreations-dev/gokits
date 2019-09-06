@@ -8,6 +8,16 @@ import (
 	"strconv"
 )
 
+func GetParam (ctx *gin.Context,paramName string) string {
+	value := ctx.PostForm(paramName)
+	if len(value) <= 0{
+		value = ctx.Query(paramName)
+		if len(value) <= 0{
+			value = ctx.Param(paramName)
+		}
+	}
+	return value
+}
 func GetForm (form interface{},formType reflect.Type,ctx *gin.Context) error {
 	count := formType.NumField()
 	setter := reflect.ValueOf(form).Elem()
