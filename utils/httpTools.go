@@ -37,6 +37,9 @@ func GetForm (form interface{},formType reflect.Type,ctx *gin.Context) error {
 		case reflect.Uint:
 			v,_ := strconv.ParseUint(value,10,0)
 			fieldSetter.Set(reflect.ValueOf(v))
+		case reflect.Uint64:
+			v,_ := strconv.ParseUint(value,10,64)
+			fieldSetter.Set(reflect.ValueOf(v))
 		case reflect.Int:
 			v,_ := strconv.Atoi(value)
 			fieldSetter.Set(reflect.ValueOf(v))
