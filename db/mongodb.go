@@ -110,7 +110,7 @@ func (client *MongoClient) FindAll(tableName string)(*mongo.Cursor,error){
 	return client.database.Collection(tableName).Find(client.getCtx(),nil)
 }
 
-func (client *MongoClient) FindAllAndFill(tableName string,array []interface{}) error {
+func (client *MongoClient) FindAllAndFill(tableName string,array interface{}) error {
 
 	cursor,err := client.database.Collection(tableName).Find(client.getCtx(),nil);
 	if err != nil{
