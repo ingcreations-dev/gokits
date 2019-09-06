@@ -34,12 +34,18 @@ func GetForm (form interface{},formType reflect.Type,ctx *gin.Context) error {
 		}
 		fieldSetter := setter.FieldByName(field.Name)
 		switch fieldSetter.Kind(){
+		case reflect.Uint:
+			v,_ := strconv.Atoi(value)
+			fieldSetter.Set(reflect.ValueOf(v))
 		case reflect.Int:
-			iv,_ := strconv.Atoi(value)
-			fieldSetter.Set(reflect.ValueOf(iv))
+			v,_ := strconv.Atoi(value)
+			fieldSetter.Set(reflect.ValueOf(v))
+		case reflect.Int64:
+			v,_ := strconv.ParseInt(value, 10, 64)
+			fieldSetter.Set(reflect.ValueOf(v))
 		case reflect.Bool:
-			bv,_ := strconv.ParseBool(value)
-			fieldSetter.Set(reflect.ValueOf(bv))
+			v,_ := strconv.ParseBool(value)
+			fieldSetter.Set(reflect.ValueOf(v))
 		default:
 			fieldSetter.Set(reflect.ValueOf(value))
 		}
