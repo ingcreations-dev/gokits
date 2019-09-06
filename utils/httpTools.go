@@ -13,7 +13,10 @@ func GetForm (form interface{},formType reflect.Type,ctx *gin.Context) error {
 	setter := reflect.ValueOf(form).Elem()
 	for i:=0; i < count; i++{
 		field := formType.Field(i)
-		paramName := field.Tag.Get("param")
+		paramName,ok := field.Tag.Lookup("param")
+		if !ok{
+			paramName = field.Name
+		}
 		required,err := strconv.ParseBool(field.Tag.Get("required"))
 		value := ""
 		value = ctx.PostForm(paramName)
